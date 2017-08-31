@@ -61,8 +61,10 @@ def main():
         output_file = output_path / file.with_suffix('.srt').name
 
         try:
-            convert = convert_to_srt(file.read_text(encoding='utf-8'))
-            output_file.write_text(convert)
+            with file.open('r', encoding='utf-8') as fp:
+                convert = convert_to_srt(fp.read())
+            with output_file.open('w') as fp:
+                fp.write(convert)
             logger.info('Converted %s to .srt format', file.name)
         except ET.ParseError:
             logger.error('The XML in %s appears to be invalid', file.name)
